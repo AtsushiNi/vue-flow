@@ -1,0 +1,214 @@
+{
+  "groups": [
+    {
+      "name": "product",
+      "tables": [
+        {
+          "name": "product",
+          "columns": [
+            { "name": "product_id", "type": "string", "primaryKey": true },
+            { "name": "name", "type": "string" },
+            { "name": "description", "type": "string" },
+            { "name": "price", "type": "number" },
+            { "name": "cost", "type": "number" },
+            { "name": "supplier_id", "type": "string" },
+            { "name": "created_at", "type": "datetime" },
+            { "name": "updated_at", "type": "datetime" }
+          ]
+        },
+        {
+          "name": "category",
+          "columns": [
+            { "name": "category_id", "type": "string", "primaryKey": true },
+            { "name": "name", "type": "string" },
+            { "name": "description", "type": "string" }
+          ]
+        },
+        {
+          "name": "supplier",
+          "columns": [
+            { "name": "supplier_id", "type": "string", "primaryKey": true },
+            { "name": "name", "type": "string" },
+            { "name": "contact", "type": "string" },
+            { "name": "phone", "type": "string" },
+            { "name": "email", "type": "string" }
+          ]
+        },
+        {
+          "name": "review",
+          "columns": [
+            { "name": "review_id", "type": "string", "primaryKey": true },
+            { "name": "product_id", "type": "string" },
+            { "name": "user_id", "type": "string" },
+            { "name": "rating", "type": "number" },
+            { "name": "comment", "type": "string" },
+            { "name": "created_at", "type": "datetime" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "inventory",
+      "tables": [
+        {
+          "name": "inventory",
+          "columns": [
+            { "name": "product_id", "type": "string", "primaryKey": true },
+            { "name": "warehouse_id", "type": "string", "primaryKey": true },
+            { "name": "quantity", "type": "number" },
+            { "name": "reorder_level", "type": "number" },
+            { "name": "last_stocked", "type": "datetime" }
+          ]
+        },
+        {
+          "name": "warehouse",
+          "columns": [
+            { "name": "warehouse_id", "type": "string", "primaryKey": true },
+            { "name": "name", "type": "string" },
+            { "name": "location", "type": "string" },
+            { "name": "capacity", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "transaction",
+      "tables": [
+        {
+          "name": "transaction",
+          "columns": [
+            { "name": "transaction_id", "type": "string", "primaryKey": true },
+            { "name": "product_id", "type": "string" },
+            { "name": "warehouse_id", "type": "string" },
+            { "name": "quantity", "type": "number" },
+            { "name": "transaction_type", "type": "string" },
+            { "name": "user_id", "type": "string" },
+            { "name": "created_at", "type": "datetime" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "user",
+      "tables": [
+        {
+          "name": "user_favorite",
+          "columns": [
+            { "name": "user_id", "type": "string", "primaryKey": true },
+            { "name": "product_id", "type": "string", "primaryKey": true },
+            { "name": "created_at", "type": "datetime" }
+          ]
+        },
+        {
+          "name": "user_product_view",
+          "columns": [
+            { "name": "user_id", "type": "string", "primaryKey": true },
+            { "name": "product_id", "type": "string", "primaryKey": true },
+            { "name": "view_count", "type": "number" },
+            { "name": "last_viewed", "type": "datetime" }
+          ]
+        },
+        {
+          "name": "user",
+          "columns": [
+            { "name": "user_id", "type": "string", "primaryKey": true },
+            { "name": "username", "type": "string" },
+            { "name": "email", "type": "string" },
+            { "name": "password_hash", "type": "string" },
+            { "name": "role_id", "type": "string" },
+            { "name": "created_at", "type": "datetime" },
+            { "name": "updated_at", "type": "datetime" }
+          ]
+        },
+        {
+          "name": "role",
+          "columns": [
+            { "name": "role_id", "type": "string", "primaryKey": true },
+            { "name": "name", "type": "string" },
+            { "name": "description", "type": "string" }
+          ]
+        },
+        {
+          "name": "permission",
+          "columns": [
+            { "name": "permission_id", "type": "string", "primaryKey": true },
+            { "name": "name", "type": "string" },
+            { "name": "description", "type": "string" }
+          ]
+        },
+        {
+          "name": "role_permission",
+          "columns": [
+            { "name": "role_id", "type": "string", "primaryKey": true },
+            { "name": "permission_id", "type": "string", "primaryKey": true }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "product_relation",
+      "tables": [
+        {
+          "name": "product_category",
+          "columns": [
+            { "name": "product_id", "type": "string", "primaryKey": true },
+            { "name": "category_id", "type": "string", "primaryKey": true }
+          ]
+        },
+        {
+          "name": "product_tag",
+          "columns": [
+            { "name": "product_id", "type": "string", "primaryKey": true },
+            { "name": "tag_id", "type": "string", "primaryKey": true }
+          ]
+        },
+        {
+          "name": "tag",
+          "columns": [
+            { "name": "tag_id", "type": "string", "primaryKey": true },
+            { "name": "name", "type": "string" },
+            { "name": "description", "type": "string" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "order",
+      "tables": [
+        {
+          "name": "order",
+          "columns": [
+            { "name": "order_id", "type": "string", "primaryKey": true },
+            { "name": "user_id", "type": "string" },
+            { "name": "order_date", "type": "datetime" },
+            { "name": "status", "type": "string" },
+            { "name": "total_amount", "type": "number" },
+            { "name": "shipping_address", "type": "string" }
+          ]
+        },
+        {
+          "name": "order_item",
+          "columns": [
+            { "name": "order_item_id", "type": "string", "primaryKey": true },
+            { "name": "order_id", "type": "string" },
+            { "name": "product_id", "type": "string" },
+            { "name": "quantity", "type": "number" },
+            { "name": "unit_price", "type": "number" }
+          ]
+        },
+        {
+          "name": "payment",
+          "columns": [
+            { "name": "payment_id", "type": "string", "primaryKey": true },
+            { "name": "order_id", "type": "string" },
+            { "name": "amount", "type": "number" },
+            { "name": "payment_method", "type": "string" },
+            { "name": "transaction_id", "type": "string" },
+            { "name": "payment_date", "type": "datetime" },
+            { "name": "status", "type": "string" }
+          ]
+        }
+      ]
+    }
+  ]
+}
