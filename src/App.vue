@@ -10,6 +10,7 @@ import '@vue-flow/minimap/dist/style.css'
 
 import { useLayout } from './composables/useLayout'
 import Sidebar from './components/Sidebar.vue'
+import TableNode from './components/TableNode.vue'
 import type { Table } from './types/tables'
 
 import tableData from './assets/tables.json'
@@ -20,6 +21,11 @@ const { nodes: initialNodes, edges: initialEdges } = generateFlowElements(tables
 
 const nodes = ref<any[]>(initialNodes)
 const edges = ref<any[]>(initialEdges)
+
+console.log('Nodes with primaryKeys:', initialNodes.map(n => ({
+  id: n.id,
+  primaryKeys: n.data.primaryKeys
+})))
 
 // VueFlowの設定
 const { 
@@ -43,12 +49,17 @@ function generateFlowElements(tables: Table[]) {
     return {
       id: table.name,
       position: { x: 0, y: 0 },
+      type: 'table',
       data: { 
         label: table.name,
-        type: 'table'
+        primaryKeys: table.columns
+          .filter(col => col.primaryKey)
+          .map(col => col.name),
+        columns: table.columns
       }
     }
   })
+  console.log(nodes)
 
   // edges(テーブル間の関係)を抽出
   const edges: any[] = []
@@ -107,6 +118,9 @@ function onNodeSelected(val: string[]): void {
         <VueFlow :nodes="nodes" :edges="edges" @nodes-initialized="layoutGraph()" style="width: 100%; height: 100%">
           <Background />
           <MiniMap />
+          <template #node-table="nodeProps">
+            <TableNode v-bind="nodeProps" />
+          </template>
         </VueFlow>
       </v-container>
     </v-main>
