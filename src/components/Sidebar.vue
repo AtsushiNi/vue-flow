@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, shallowRef } from 'vue'
+import { ref, shallowRef, watch } from 'vue'
 
 import type { Table } from '../types/tables'
 
@@ -16,7 +16,8 @@ const props = defineProps<{
       name: string;
       tables: Table[];
     }[];
-  }
+  };
+  selectedTables?: Table[];
 }>();
 
 const emit = defineEmits(['nodeSelected']);
@@ -33,11 +34,22 @@ const menuItems = ref<MenuItem[]>(props.tableData.groups.map((group: { name: str
 
 const open = shallowRef([1, 3]);
 const selected = shallowRef<string[]>(
+  props.selectedTables?.map(table => "table-" + table.name) || 
   menuItems.value.flatMap(group => [
     group.id,
     ...(group.children?.map(table => table.id) || [])
   ])
 );
+
+// props.selectedTablesが変更されたらselectedを更新
+watch(() => props.selectedTables, (newTables) => {
+  selected.value = newTables?.map(table => "table-" + table.name) || 
+    menuItems.value.flatMap(group => [
+      group.id,
+      ...(group.children?.map(table => table.id) || [])
+    ]);
+}, { deep: true });
+
 const search = shallowRef<string | undefined>(undefined);
 
 // サイドバーで表示するテーブルを変更した時のイベントハンドラ

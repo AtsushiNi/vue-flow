@@ -8,3 +8,8 @@ export interface Table {
   name: string;
   columns: Column[];
 }
+
+export interface Group {
+  name: string;
+  tables: Table[];
+}
