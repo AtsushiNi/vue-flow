@@ -58,6 +58,17 @@ button:focus-visible {
   padding: 2em;
 }
 
+.v-tooltip > .v-overlay__content {
+  background-color: #ffffff;
+  color: #333;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 0;
+  max-width: 300px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
 #app {
   width: 100%;
   margin: 0 auto;

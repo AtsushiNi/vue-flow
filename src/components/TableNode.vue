@@ -3,9 +3,8 @@ import type { NodeProps } from "@vue-flow/core";
 import { Handle, Position } from "@vue-flow/core";
 import { ref, computed } from "vue";
 
-
 function showRelations() {
-  emit('show-relations', props.data.label);
+  emit("show-relations", props.data.label);
 }
 
 interface Column {
@@ -29,36 +28,34 @@ const props = defineProps<
   }>
 >();
 
-const emit = defineEmits(['show-relations']);
+const emit = defineEmits(["show-relations"]);
 
 const showNonPkProperties = ref(false);
-const nonPkColumns = computed(() => 
-  props.data.columns?.filter(col => !col.primaryKey) || []
+const nonPkColumns = computed(
+  () => props.data.columns?.filter((col) => !col.primaryKey) || []
 );
-const pkColumns = computed(() => 
-  props.data.columns?.filter(col => col.primaryKey) || []
+const pkColumns = computed(
+  () => props.data.columns?.filter((col) => col.primaryKey) || []
 );
 
 const nodeStyle = computed<Record<string, string>>(() => ({
-  padding: '10px',
-  background: 'white',
-  border: '1px solid #ddd',
-  borderRadius: '5px',
-  position: 'relative' as const,
-  transition: 'all 0.3s ease'
+  padding: "10px",
+  background: "white",
+  border: "1px solid #ddd",
+  borderRadius: "5px",
+  position: "relative" as const,
+  transition: "all 0.3s ease",
 }));
 </script>
 
 <template>
   <v-tooltip
     location="top"
-    color="#2c3e50"
-    text-color="#ecf0f1"
     transition="scale-transition"
     :open-delay="300"
-    :close-delay="100"
-    :max-width="250"
-    :min-width="150"
+    :close-delay="300"
+    :max-width="300"
+    :min-width="200"
     :z-index="1000"
     class="custom-tooltip"
     interactive
@@ -77,11 +74,7 @@ const nodeStyle = computed<Record<string, string>>(() => ({
         </div>
         <v-table density="compact" style="margin-top: 10px; font-size: 12px">
           <tbody>
-            <tr
-              v-for="col in pkColumns"
-              :key="col.name"
-              style="color: #1a73e8"
-            >
+            <tr v-for="col in pkColumns" :key="col.name" style="color: #1a73e8">
               <td style="text-align: left">{{ col.name }}</td>
               <td style="text-align: left">{{ col.type }}</td>
             </tr>
@@ -99,20 +92,23 @@ const nodeStyle = computed<Record<string, string>>(() => ({
         </v-table>
       </div>
     </template>
-    <div style="padding: 10px; display: flex; flex-direction: column; gap: 10px">
-      <div style="font-size: 14px; line-height: 1.4">
-        <div style="font-weight: 500; margin-bottom: 5px">テーブル操作</div>
-        <div style="font-size: 12px">- クリックでカラム詳細表示</div>
-        <div style="font-size: 12px">- 下のボタンでリレーション表示</div>
-      </div>
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          background-color: #ffffff;
+          border-radius: 8px;
+        "
+      >
       <v-btn
         size="x-small"
-        color="primary"
-        variant="tonal"
+        variant="elevated"
         @click.stop="showRelations"
-        style="margin-top: 5px"
+        style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)"
       >
-        リレーション表示/非表示
+        リレーション表示
       </v-btn>
     </div>
   </v-tooltip>
