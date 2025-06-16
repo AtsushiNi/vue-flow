@@ -88,3 +88,22 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.highlighted-edge {
+  stroke: #42a5f5;
+  stroke-width: 3px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+    stroke-width: 4px;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}

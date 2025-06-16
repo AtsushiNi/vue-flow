@@ -7,6 +7,11 @@ function showRelations() {
   emit("show-relations", props.data.label);
 }
 
+function onClick() {
+  showNonPkProperties.value = !showNonPkProperties.value
+  emit("highlight-relations", props.data.label)
+}
+
 interface Column {
   name: string;
   type: string;
@@ -28,7 +33,7 @@ const props = defineProps<
   }>
 >();
 
-const emit = defineEmits(["show-relations"]);
+const emit = defineEmits(["show-relations", "highlight-relations"]);
 
 const showNonPkProperties = ref(false);
 const nonPkColumns = computed(
@@ -64,7 +69,7 @@ const nodeStyle = computed<Record<string, string>>(() => ({
       <div
         v-bind="activatorProps"
         :style="nodeStyle"
-        @click="showNonPkProperties = !showNonPkProperties"
+        @click="onClick"
       >
         <Handle type="target" :position="Position.Top" />
         <Handle type="source" :position="Position.Bottom" />

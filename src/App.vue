@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, nextTick } from "vue";
-import { VueFlow, useVueFlow } from "@vue-flow/core";
+import { VueFlow, useVueFlow, type Edge, type Node } from "@vue-flow/core";
 import { Background } from "@vue-flow/background";
 import { MiniMap } from "@vue-flow/minimap";
 import "@vue-flow/core/dist/style.css";
@@ -23,6 +23,8 @@ const { nodes: initialNodes, edges: initialEdges } =
 
 const nodes = ref<any[]>(initialNodes);
 const edges = ref<any[]>(initialEdges);
+const { setEdges, setNodes } = useVueFlow();
+const highlightedTableName = ref<string>("");
 
 // 表示中のテーブルリスト
 const selectedTables = ref<Table[]>(
@@ -114,6 +116,7 @@ function onNodeSelected(val: string[]): void {
   }
 }
 
+// 特定のテーブルと紐づく他のテーブルを全て表示する
 function showRelations(tableName: string) {
   // 関連テーブルを含むノードを取得
   const addedTables = calcRelatedTables(tableData, tableName);
@@ -137,6 +140,47 @@ function showRelations(tableName: string) {
     layoutGraph();
   }
 }
+
+// 特定のテーブルとの紐付きを全てハイライトする
+function highlightRelations(tableName: string) {
+  // 関連するノードのIDを収集
+  const relatedNodeIds = new Set<string>();
+  edges.value.forEach(edge => {
+    if (edge.source === tableName) relatedNodeIds.add(edge.target);
+    if (edge.target === tableName) relatedNodeIds.add(edge.source);
+  });
+
+  // ノードにスタイルを適用
+  const newNodes = nodes.value.map(node => {
+    const isRelated = node.id === tableName || relatedNodeIds.has(node.id);
+    return {
+      ...node,
+      style: isRelated ? {
+        border: "2px solid rgba(51,153,255,0.7)",
+        boxShadow: "0 0 8px rgba(51,153,255,0.5)",
+        animation: "pulse 1s infinite"
+      } : {}
+    };
+  });
+
+  // エッジにスタイルを適用
+  const newEdges = edges.value.map(edge => {
+    const isRelated = edge.source === tableName || edge.target === tableName;
+    return {
+      ...edge,
+      style: isRelated ? {
+        stroke: "rgba(51,153,255,0.7)",
+        strokeWidth: 3,
+        animation: "pulse 1s infinite",
+        filter: "drop-shadow(0 0 8px rgba(51,153,255,0.5))"
+      } : { stroke: "" }
+    };
+  });
+
+  setEdges(newEdges);
+  setNodes(newNodes);
+  highlightedTableName.value = tableName;
+}
 </script>
 
 <template>
@@ -149,18 +193,19 @@ function showRelations(tableName: string) {
 
     <v-main>
       <v-container fluid class="fill-height">
-        <VueFlow
-          :nodes="nodes"
-          :edges="edges"
-          @nodes-initialized="layoutGraph()"
-          style="width: 100%; height: 100%"
-        >
+          <VueFlow
+            :nodes="nodes"
+            :edges="edges"
+            @nodes-initialized="layoutGraph()"
+            style="width: 100%; height: 100%"
+          >
           <Background />
           <MiniMap />
           <template #node-table="nodeProps">
             <TableNode
               v-bind="nodeProps"
               @show-relations="showRelations"
+              @highlight-relations="highlightRelations"
             />
           </template>
         </VueFlow>
@@ -169,4 +214,20 @@ function showRelations(tableName: string) {
   </v-app>
 </template>
 
-<style></style>
+<style>
+@keyframes pulse {
+  0% {
+    stroke-opacity: 0.7;
+    stroke-width: 3;
+  }
+  50% {
+    stroke-opacity: 1;
+    stroke-width: 4;
+    filter: "drop-shadow(0 0 12px #3399ff)"
+  }
+  100% {
+    stroke-opacity: 0.7;
+    stroke-width: 3;
+  }
+}
+</style>
